@@ -9,14 +9,11 @@ import truncate from '../util/truncate';
 
 const endpoint = 'https://www.frontend.com/forgot-password/:token/reset';
 
-jest.mock('../../src/lib/Queue');
+jest.mock('bull');
 
 describe('Forgot Password', () => {
   beforeEach(async () => {
     await truncate();
-  });
-  afterAll(async done => {
-    done();
   });
 
   it('should be able to request password recovery', async done => {
