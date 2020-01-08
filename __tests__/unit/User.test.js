@@ -8,8 +8,7 @@ describe('User', () => {
     await truncate();
   });
 
-  // FIXME: ver erro do test
-  it.skip('should encrypt user password when new user created', async () => {
+  it('should encrypt user password when new user created', async () => {
     const user = await factory.create('User', {
       password: '123456',
     });

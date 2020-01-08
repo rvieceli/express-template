@@ -3,8 +3,9 @@ import Bull from 'bull';
 import redisConfig from '../config/redis';
 
 import AccountConfirmationMail from '../app/jobs/AccountConfirmationMail';
+import ForgotPasswordMail from '../app/jobs/ForgotPasswordMail';
 
-const jobs = [AccountConfirmationMail];
+const jobs = [AccountConfirmationMail, ForgotPasswordMail];
 
 class Queue {
   constructor() {

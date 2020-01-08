@@ -4,9 +4,12 @@ import app from '../../src/app';
 import factory from '../factories';
 import truncate from '../util/truncate';
 
-describe('User', () => {
+describe('Session', () => {
   beforeEach(async () => {
     await truncate();
+  });
+  afterAll(async done => {
+    done();
   });
 
   it('should be validade body params', async () => {

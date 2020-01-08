@@ -2,6 +2,7 @@ import Sequelize, { Model } from 'sequelize';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import uuid from 'uuid/v4';
+import { addHours } from 'date-fns';
 import authConfig from '../../config/auth';
 
 class User extends Model {
@@ -52,6 +53,21 @@ class User extends Model {
     return this.update({
       externalId: uuid(),
       active: true,
+    });
+  }
+
+  generateForgotPasswordToken() {
+    return this.update({
+      resetPasswordToken: uuid(),
+      resetPasswordExpires: addHours(new Date(), 1),
+    });
+  }
+
+  resetPassword(password) {
+    return this.update({
+      password,
+      resetPasswordToken: null,
+      resetPasswordExpires: null,
     });
   }
 

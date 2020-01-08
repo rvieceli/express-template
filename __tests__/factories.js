@@ -8,7 +8,6 @@ factory.define('User', User, () => {
     name: faker.name.findName(),
     email: faker.internet.email(),
     password: faker.internet.password(),
-    endpoint: 'https://www.frontend.com/confirmation/:token/account',
   };
 
   return {

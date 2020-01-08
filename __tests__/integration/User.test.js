@@ -4,60 +4,52 @@ import app from '../../src/app';
 import factory from '../factories';
 import truncate from '../util/truncate';
 
-// visto em
-// https://github.com/stipsan/ioredis-mock/issues/568
-jest.mock('ioredis', () => {
-  // eslint-disable-next-line global-require
-  const Redis = require('ioredis-mock');
-  if (typeof Redis === 'object') {
-    // the first mock is an ioredis shim because ioredis-mock depends on it
-    // https://github.com/stipsan/ioredis-mock/blob/master/src/index.js#L101-L111
-    return {
-      Command: { _transformer: { argument: {}, reply: {} } },
-    };
-  }
-  // second mock for our code
-  return function(...args) {
-    return new Redis(args);
-  };
-});
+const endpoint = 'https://www.frontend.com/confirmation/:token/account';
+
+jest.mock('../../src/lib/Queue');
 
 describe('User', () => {
   beforeEach(async () => {
     await truncate();
   });
 
-  it('should be validate body attributes', async () => {
+  it('should be validate body attributes', async done => {
     const response = await request(app)
       .post('/users')
       .send(/** empty */);
 
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty('detail');
+
+    done();
   });
 
-  it('should be able to register', async () => {
+  it('should be able to register', async done => {
     const user = await factory.attrs('User');
 
     const response = await request(app)
       .post('/users')
-      .send(user);
+      .send({ ...user, endpoint });
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('message');
+
+    done();
   });
 
-  it('should not be able to register with duplicated email', async () => {
+  it('should not be able to register with duplicated email', async done => {
     const user = await factory.attrs('User');
 
     await request(app)
       .post('/users')
-      .send(user);
+      .send({ ...user, endpoint });
 
     const response = await request(app)
       .post('/users')
-      .send(user);
+      .send({ ...user, endpoint });
 
     expect(response.status).toBe(400);
+
+    done();
   });
 });
