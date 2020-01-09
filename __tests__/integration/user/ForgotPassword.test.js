@@ -1,11 +1,11 @@
 import request from 'supertest';
 
 import uuid from 'uuid';
-import app from '../../src/app';
-import factory from '../factories';
-import User from '../../src/app/models/User';
+import app from '../../../src/app';
+import factory from '../../factories';
+import User from '../../../src/app/models/User';
 
-import truncate from '../util/truncate';
+import truncate from '../../util/truncate';
 
 const endpoint = 'https://www.frontend.com/forgot-password/:token/reset';
 

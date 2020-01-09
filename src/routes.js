@@ -9,13 +9,17 @@ import userStoreValidator from './app/validators/userStoreValidator';
 import sessionStoreValidator from './app/validators/sessionStoreValidator';
 import forgotPasswordValidator from './app/validators/forgotPasswordValidator';
 import resetPasswordValidator from './app/validators/resetPasswordValidator';
+import tokenValidation from './app/middlewares/params/tokenValidation';
 
 const routes = new Router();
+
+routes.param('token', tokenValidation);
 
 routes.get('/', (req, res) => res.json({ message: 'Welcome to your api' }));
 
 routes.post('/users', userStoreValidator, UserController.store);
-routes.post('/users/:token/activation', ActivationController.store);
+routes.get('/activation/resend', ActivationController.index);
+routes.post('/activation/:token/confirm', ActivationController.store);
 routes.post('/sessions', sessionStoreValidator, SessionController.store);
 routes.post(
   '/forgot-password',

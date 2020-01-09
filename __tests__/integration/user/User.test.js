@@ -1,12 +1,12 @@
 import request from 'supertest';
 
-import app from '../../src/app';
-import factory from '../factories';
-import truncate from '../util/truncate';
+import app from '../../../src/app';
+import factory from '../../factories';
+import truncate from '../../util/truncate';
 
 const endpoint = 'https://www.frontend.com/confirmation/:token/account';
 
-jest.mock('../../src/lib/Queue');
+jest.mock('bull');
 
 describe('User', () => {
   beforeEach(async () => {

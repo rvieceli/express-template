@@ -1,15 +1,31 @@
 import { ValidationError } from '../../../lib/errors';
 import User from '../../models/User';
-
-const regexUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+import AccountConfirmationMail from '../../jobs/AccountConfirmationMail';
+import Queue from '../../../lib/Queue';
 
 class ActivationController {
+  async index(request, response) {
+    const { email, endpoint } = request.body;
+
+    const user = await User.findByEmail(email);
+
+    if (user) {
+      if (user.active)
+        throw new ValidationError('Your account has been ativated.');
+
+      Queue.add(AccountConfirmationMail.key, {
+        user,
+        link: endpoint.replace(':token', user.externalId),
+      });
+    }
+
+    return response.json({
+      message: 'We resend you an email to confirmation account.',
+    });
+  }
+
   async store(request, response) {
     const { token } = request.params;
-
-    if (!regexUuid.test(token)) {
-      throw new ValidationError('Token is invalid');
-    }
 
     const user = await User.findByExternalId(token);
 

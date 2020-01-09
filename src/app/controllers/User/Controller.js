@@ -12,7 +12,7 @@ class Controller {
     });
 
     return response.json({
-      message: 'We send you email to confirmation account.',
+      message: 'We send you an email to confirmation account.',
     });
   }
 }
