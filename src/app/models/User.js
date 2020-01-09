@@ -66,6 +66,7 @@ class User extends Model {
   resetPassword(password) {
     return this.update({
       password,
+      externalId: uuid(),
       resetPasswordToken: null,
       resetPasswordExpires: null,
     });
