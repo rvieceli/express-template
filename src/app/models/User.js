@@ -89,7 +89,7 @@ class User extends Model {
     const { externalId, name, email } = this;
 
     return {
-      externalId,
+      id: externalId,
       name,
       email,
     };

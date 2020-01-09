@@ -19,4 +19,20 @@ describe('User', () => {
     expect(compareHash).toBe(true);
     expect(checkPassword).toBe(true);
   });
+
+  it('should be remove sinsible data from user', async () => {
+    const user = await factory.create('User');
+
+    const jsonUser = JSON.parse(JSON.stringify(user));
+
+    expect(jsonUser).not.toHaveProperty('password');
+    expect(jsonUser).not.toHaveProperty('password_hash');
+    expect(jsonUser).not.toHaveProperty('active');
+    expect(jsonUser).not.toHaveProperty('resetPasswordToken');
+    expect(jsonUser).not.toHaveProperty('resetPasswordExpires');
+    expect(jsonUser).not.toHaveProperty('createdAt');
+    expect(jsonUser).not.toHaveProperty('updatedAt');
+    expect(jsonUser).not.toHaveProperty('externalId');
+    expect(jsonUser.id).toBe(user.externalId);
+  });
 });

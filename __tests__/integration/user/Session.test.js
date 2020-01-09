@@ -81,4 +81,49 @@ describe('Session', () => {
       wrongUserResponse.body.error
     );
   });
+
+  it('should be able to access protected route with authentication', async () => {
+    const user = await factory.create('ActiveUser');
+
+    const token = user.generateToken();
+
+    const response = await request(app)
+      .get('/status')
+      .set('Authorization', `Bearer ${token}`)
+      .send();
+
+    expect(response.status).toBe(200);
+  });
+
+  it('should be not able to access protected route without authentication', async () => {
+    const response = await request(app)
+      .get('/status')
+      .send();
+
+    expect(response.status).toBe(401);
+  });
+
+  it('should be not able to access protected route with invalid token', async () => {
+    const response = await request(app)
+      .get('/status')
+      .set('Authorization', `Bearer invalid_token`)
+      .send();
+
+    expect(response.status).toBe(401);
+  });
+
+  it('should be not able to access protected route with invalid user token', async () => {
+    const user = await factory.create('ActiveUser');
+
+    const token = user.generateToken();
+
+    await user.destroy();
+
+    const response = await request(app)
+      .get('/status')
+      .set('Authorization', `Bearer ${token}`)
+      .send();
+
+    expect(response.status).toBe(401);
+  });
 });
